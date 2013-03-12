@@ -1,0 +1,66 @@
+FSM
+1. Active State Generates
+	- active staten styrer hvor den går videre
+	- Fordeler 
+		- Enkelt
+		- ytelse
+	- Ulemper
+		- Mye redundant kode 
+	-Klasser eller Hardkodet enums?
+
+2. Hierarchical FSMs  <--- Tar for mye tid
+	- FSM inni hverandre
+	- Fordeler
+		- færre gjenntatte states
+		- Kan huske forrige state
+	- Ulemper 
+		-vanskligere å designe å implementere 
+3. Child-States Compete <--- Dårlig Ytelsesmessig
+	- Spørr om relevanse
+	- Velger den med høyest relevanse
+	- Ser på alle states, før den velger den mest relevante
+	- Relevance metode
+	- Fordeler
+		- Inneholder ikke transition-logikk
+			-Lettere
+		- Lettere å modifiser i ettertid
+	- Ulemper
+		- Ressurskrevende
+		- Større mulighet for spin
+
+
+Styrings algorithmer
+- Seek & Arrive -> Pursuit er mer effektivt for ramming
+- Pursuit! -> prøve å ramme hvis mer liv
+- Flee! -> Rømme fra ramming ved mindre liv
+- Evade! -> hvis langt unna. 
+	-Random bevegelse for å forvirre.
+- Wander -> Bruker Evade istedenfor, for å ungå kuler
+- Obstacle avoidance -> er ikke obsticles
+- Wall avoidance -> for nærme veggen.
+- Interpose -> Er ingen å gå imellom!
+- Hide -> har ingenting å gjemme seg bak
+- Path following -> Må se utifra sitvasjonen, blir for åpenbart.
+- Offset pursuit! -> Holde avstand iforhold agenda.
+
+States - Kjøring 
+Win
+Ram
+Escape
+Avoid
+Idle
+
+States - Turret
+Win
+Scan
+Attack
+SaveEnergy
+
+
+
+
+
+
+ 
+
+ 
