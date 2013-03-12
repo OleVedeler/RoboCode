@@ -10,7 +10,7 @@ namespace PG4500_2013_Innlevering1.FSM_states.Turret
 	{
 		public TurretSaveEnergy(ref EnemyData data)
 		{
-			this.Data = data;
+			//this.Data = data;
 		}
 
 		public override void Update()

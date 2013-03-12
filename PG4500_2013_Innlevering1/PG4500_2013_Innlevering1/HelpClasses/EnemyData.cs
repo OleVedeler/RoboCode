@@ -26,7 +26,7 @@ namespace Santom
 		public double Distance { get; set; }  // Distance from us to enemy.
 		public Vector2D Offset { get; set; }  // Offset vector from us to enemy, in battlefield x y coordinates.
 		public double Energy { get; set; }  // Energy on enemy.
-		public Point2D Position { get; set; }  // Position of enemy, in battlefield x y coordinates.
+		public Vector2D Position { get; set; }  // Position of enemy, in battlefield x y coordinates.
 		public double Velocity { get; set; }  // Velocity of enemy.
 		public double Acceleration { get; set; }  // How fast our enemy changes speed. (Calculated by comparing values over 2 scans.)
 		public double Heading { get; set; }  // Heading of enemy.
@@ -40,7 +40,7 @@ namespace Santom
 		{
 			Bullets = new List<BulletData>();
 			Offset = new Vector2D();
-			Position = new Point2D();
+			Position = new Vector2D();
 		}
 
 
@@ -67,7 +67,7 @@ namespace Santom
 		public void SetEnemyData(long newTime,
 							   ScannedRobotEvent newEnemyData,
 							   Vector2D newOffset,
-							   Point2D newPosition)
+							   Vector2D newPosition)
 		{
 			// First we set the stuff that depends on last updates' values:
 			TurnRate = Utils.NormalRelativeAngleDegrees(newEnemyData.Heading - Heading) / (newTime - Time);

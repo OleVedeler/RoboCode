@@ -4,24 +4,46 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Robocode;
+using Robocode.Util;
+using Santom;
 
 
 namespace PG4500_2013_Innlevering1 
 {
 	class Vedole_Joroiv_TheAntSmasher : AdvancedRobot
 	{
-		public override void Run()
-		{
- 			base.Run();
+        RoboData rData = new RoboData();
+        EnemyData eData = new EnemyData();
 
-			int ActiveSate = 0;
-			List<State> TurretFSM = new List<State>();
-			//TurretFSM.Add(new TurretStateWin());
+        public override void Run()
+        {
+            SetTurnRadarRight(360);
+            SetAdjustRadarForGunTurn(true);
 
+            DriveStateEscape esc = new DriveStateEscape(ref rData);
 
-			//activestate = states[activState].GetState();
-			//states[ActiveState].Update();
+            while (true)
+            {
+                
+                //esc.Update();
 
-		}
+                //Ahead(rData.ahead);
+
+                Ahead(100);
+
+                Execute();
+            }
+        }
+
+        public override void OnScannedRobot(ScannedRobotEvent e)
+        {
+            double radarTurn = Heading + e.Bearing - RadarHeading;
+
+            double radar = 1.9 * Utils.NormalRelativeAngleDegrees(radarTurn);
+
+            SetTurnRadarRight(radar);
+
+            SetTurnGunRight(radar);
+        }
 	}
 }

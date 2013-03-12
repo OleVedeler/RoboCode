@@ -19,7 +19,7 @@ namespace PG4500_2013_Innlevering1
 
         public override int GetNewState()
         {
-            if(
+            //if(
             //If more energy; change to RAM
             //If much less energy; change to ESCAPE
             return base.GetNewState();

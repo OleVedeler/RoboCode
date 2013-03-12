@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Santom;
+using Robocode;
 
 namespace PG4500_2013_Innlevering1
 {
@@ -11,9 +12,12 @@ namespace PG4500_2013_Innlevering1
     {
         public SteeringBehavior() { }
 
-        public Vector2D Flee(Point2D targetPos, Point2D vehiclePos)
+        public Vector2D Flee(Vector2D targetPos, Vector2D vehiclePos, double MAX_SPEED, Vector2D velocity)
         {
-            return null;
+            Vector2D desiredVelociyNormalized = targetPos - vehiclePos;
+            desiredVelociyNormalized.Normalize();
+            Vector2D desiredVelocity = MAX_SPEED * desiredVelociyNormalized;
+            return desiredVelocity - velocity;
         }
 
         public Point2D Evade(Point2D bulletPos, Point2D vehiclePos) 
