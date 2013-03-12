@@ -3,15 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Santom;
 
 namespace PG4500_2013_Innlevering1.FSM_states.Turret
 {
 	class TurretStateScan : State
 	{
+		public TurretStateScan(ref RoboData rData, ref EnemyData eData)
+		{
+			this.rData = rData;
+			this.eData = eData;
+		}
+
 		public override void Update()
 		{
-
-			//search for the enemy until it is picked up on the radar
+			rData.rotationRadarLeft = 45;
 			base.Update();
 		}
 
