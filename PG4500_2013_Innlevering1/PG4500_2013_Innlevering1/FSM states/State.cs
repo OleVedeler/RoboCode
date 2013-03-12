@@ -28,7 +28,9 @@ namespace PG4500_2013_Innlevering1
 
 	abstract class State : AdvancedRobot
 	{
-		protected EnemyData Data; 
+		protected EnemyData eData;
+        protected RoboData rData;
+        protected SteeringBehavior steeringBehavior;
 
 		public virtual void Update()
 		{

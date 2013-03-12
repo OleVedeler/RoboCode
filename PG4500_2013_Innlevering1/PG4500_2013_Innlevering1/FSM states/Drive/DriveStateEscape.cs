@@ -9,17 +9,16 @@ namespace PG4500_2013_Innlevering1
 {
     class DriveStateEscape : State
     {
-        SteeringBehavior steeringBehavior;
-
-        public DriveStateEscape() 
+        public DriveStateEscape(ref RoboData rData) 
         {
+            this.rData = rData;
             steeringBehavior = new SteeringBehavior();
         }
 
         public override void Update()
         {
             //Steeringbehavior flee and wall avoidence
-
+            
         }
 
         public override int GetNewState()
