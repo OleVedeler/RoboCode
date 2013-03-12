@@ -10,21 +10,7 @@ using Santom;
 namespace PG4500_2013_Innlevering1
 {
 
-	//Enum for all the drivestates
-	public enum DriveState
-	{
-		RAM,
-		ESCAPE,
-		AVOID
-	};
 	
-	//Forskjellige Statene for enum maskin
-	public enum TurretState
-	{
-		SCAN,
-		ATTACK,
-		SAVEENERGY
-	}
 
 	abstract class State
 	{

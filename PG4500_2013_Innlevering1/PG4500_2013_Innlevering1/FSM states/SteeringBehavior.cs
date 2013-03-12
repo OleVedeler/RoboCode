@@ -22,6 +22,7 @@ namespace PG4500_2013_Innlevering1
         public Vector2D Flee(Vector2D targetPos, Vector2D vehiclePos, double MAX_SPEED, Vector2D velocity)
         {
 
+
             Vector2D desiredVelociyNormalized = targetPos - vehiclePos;
             desiredVelociyNormalized.Normalize();
             Vector2D desiredVelocity = MAX_SPEED * desiredVelociyNormalized;
