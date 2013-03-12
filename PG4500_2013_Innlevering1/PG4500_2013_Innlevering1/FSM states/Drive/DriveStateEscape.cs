@@ -19,13 +19,13 @@ namespace PG4500_2013_Innlevering1
         public override void Update()
         {
             //Steeringbehavior flee and wall avoidence
-            ahead(steeringBehavior.Flee());
+
         }
 
         public override int GetNewState()
         {
             //If more energy; change to RAM
-            //If the same energy; change to Avoid
+            //If the same energy; change to AVOID
             return base.GetNewState();
         }
     }
