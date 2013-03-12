@@ -10,13 +10,13 @@ namespace PG4500_2013_Innlevering1
 {
 	class Vedole_Joroiv_TheAntSmasher : AdvancedRobot
 	{
-
 		public override void Run()
 		{
  			base.Run();
 
-			//List<State> states;
-
+			int ActiveSate = 0;
+			List<State> TurretFSM = new List<State>();
+			//TurretFSM.Add(new TurretStateWin());
 
 
 			//activestate = states[activState].GetState();

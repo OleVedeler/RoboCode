@@ -42,14 +42,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HelpClasses\BulletData.cs" />
-    <Compile Include="HelpClasses\EnemyData.cs" />
-    <Compile Include="HelpClasses\Point2D.cs" />
-    <Compile Include="HelpClasses\RoboHelpers.cs" />
-    <Compile Include="State.cs" />
-    <Compile Include="HelpClasses\Vector2D.cs" />
+    <Compile Include="FSM states\State.cs" />
+    <Compile Include="FSM states\Turret\TurretStateAttack.cs" />
+    <Compile Include="FSM states\Turret\TurretStateSaveEnergy.cs" />
+    <Compile Include="FSM states\Turret\TurretStateScan.cs" />
+    <Compile Include="HelpClasses\BulletData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="HelpClasses\EnemyData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="HelpClasses\Point2D.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="HelpClasses\RoboHelpers.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Vedole_Joroiv_TheAntSmasher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="FSM states\Drive\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
