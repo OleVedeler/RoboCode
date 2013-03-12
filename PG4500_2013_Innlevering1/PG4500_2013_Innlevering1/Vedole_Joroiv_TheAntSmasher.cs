@@ -15,6 +15,7 @@ namespace PG4500_2013_Innlevering1
         RoboData rData = new RoboData();
         EnemyData eData = new EnemyData();
 
+
         public override void Run()
         {
             SetTurnRadarRight(360);
@@ -43,6 +44,8 @@ namespace PG4500_2013_Innlevering1
             SetTurnRadarRight(radar);
 
             SetTurnLeft(e.Bearing);
+
+            Ahead(100);
 
             //SetTurnGunRight(radar);
         }

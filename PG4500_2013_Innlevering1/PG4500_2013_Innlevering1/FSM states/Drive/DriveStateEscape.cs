@@ -12,7 +12,7 @@ namespace PG4500_2013_Innlevering1
         public DriveStateEscape(ref RoboData rData) 
         {
             this.rData = rData;
-            steeringBehavior = new SteeringBehavior();
+            steeringBehavior = new SteeringBehavior(ref rData, ref eData);
         }
 
         public override void Update()
