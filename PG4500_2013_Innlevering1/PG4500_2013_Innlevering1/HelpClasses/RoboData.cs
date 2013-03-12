@@ -21,8 +21,10 @@ namespace PG4500_2013_Innlevering1
         public double rotationLeft;
         public double rotationRight;
         public double fire;
-        public double heading;
-
+        public double Robotheading;
+		public double RadarHeading;
+		public Boolean isOnTarget;
+		
         public RoboData()
         {
             position = new Point2D();

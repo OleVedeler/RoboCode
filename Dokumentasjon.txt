@@ -58,6 +58,8 @@ SaveEnergy
 
 
 
+Bruker enum for å statene for å gjøre det mer leselig.
+
 
 
 

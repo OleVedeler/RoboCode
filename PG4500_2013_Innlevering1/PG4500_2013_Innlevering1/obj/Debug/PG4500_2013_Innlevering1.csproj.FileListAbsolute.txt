@@ -4,3 +4,4 @@ C:\Users\ole\Desktop\Githubfolder\RoboCode\PG4500_2013_Innlevering1\PG4500_2013_
 C:\Users\ole\Desktop\Githubfolder\RoboCode\PG4500_2013_Innlevering1\PG4500_2013_Innlevering1\bin\Debug\robocode.xml
 C:\Users\ole\Desktop\Githubfolder\RoboCode\PG4500_2013_Innlevering1\PG4500_2013_Innlevering1\obj\Debug\PG4500_2013_Innlevering1.dll
 C:\Users\ole\Desktop\Githubfolder\RoboCode\PG4500_2013_Innlevering1\PG4500_2013_Innlevering1\obj\Debug\PG4500_2013_Innlevering1.pdb
+C:\Users\ole\Desktop\Githubfolder\RoboCode\PG4500_2013_Innlevering1\PG4500_2013_Innlevering1\obj\Debug\PG4500_2013_Innlevering1.csprojResolveAssemblyReference.cache

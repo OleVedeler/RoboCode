@@ -17,10 +17,14 @@ namespace PG4500_2013_Innlevering1.FSM_states.Turret
 
 		public override int GetNewState()
 		{
-			//if enemy found && enemy has a set portion less health then you: attack
-			//if enemy found && enemy has a set portion more health then you : save energy
-			//else return this.state
-			return base.GetNewState();
+
+			if(rData.isOnTarget){
+				if (rData.energy + (rData.energy / 10) < eData.Energy)
+					return (int) TurretState.SAVEENERGY;
+				if (rData.energy + (rData.energy / 10) >= eData.Energy)
+					return (int)TurretState.ATTACK;
+			}
+			return (int) TurretState.SCAN;
 		}
 	}
 }
