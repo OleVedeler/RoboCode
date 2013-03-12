@@ -18,7 +18,6 @@ namespace PG4500_2013_Innlevering1
         public override void Update()
         {
             //Steeringbehavior flee and wall avoidence
-            
         }
 
         public override int GetNewState()
