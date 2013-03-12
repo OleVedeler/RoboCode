@@ -24,6 +24,9 @@ namespace PG4500_2013_Innlevering1
         public double fire;
         public double heading;
         public double MAX_SPEED;
+        public double Robotheading;
+		public double RadarHeading;
+		public Boolean isOnTarget;
 
         public RoboData()
         {

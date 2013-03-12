@@ -26,7 +26,7 @@ namespace PG4500_2013_Innlevering1
 		SAVEENERGY
 	}
 
-	abstract class State : AdvancedRobot
+	abstract class State
 	{
 		protected EnemyData eData;
         protected RoboData rData;
