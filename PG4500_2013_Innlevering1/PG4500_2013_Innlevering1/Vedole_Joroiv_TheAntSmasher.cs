@@ -18,7 +18,6 @@ namespace PG4500_2013_Innlevering1
         public override void Run()
         {
             SetTurnRadarRight(360);
-            SetAdjustRadarForGunTurn(true);
 
             DriveStateEscape esc = new DriveStateEscape(ref rData);
 
@@ -43,7 +42,9 @@ namespace PG4500_2013_Innlevering1
 
             SetTurnRadarRight(radar);
 
-            SetTurnGunRight(radar);
+            SetTurnLeft(e.Bearing);
+
+            //SetTurnGunRight(radar);
         }
 	}
 }
