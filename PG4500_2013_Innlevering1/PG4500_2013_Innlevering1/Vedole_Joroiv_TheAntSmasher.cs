@@ -8,19 +8,19 @@ using Robocode;
 
 namespace PG4500_2013_Innlevering1 
 {
-	class Vedole_Jorøiv_TheAntSmasher : AdvancedRobot
+	class Vedole_Joroiv_TheAntSmasher : AdvancedRobot
 	{
 
 		public override void Run()
 		{
  			base.Run();
 
-			List<State> states;
+			//List<State> states;
 
 
 
-			activestate = states[activState].GetState();
-			states[ActiveState].Update();
+			//activestate = states[activState].GetState();
+			//states[ActiveState].Update();
 
 		}
 	}
