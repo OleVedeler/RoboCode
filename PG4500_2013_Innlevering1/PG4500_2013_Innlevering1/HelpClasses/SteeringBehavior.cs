@@ -10,23 +10,22 @@ namespace PG4500_2013_Innlevering1
 {
     class SteeringBehavior
     {
-        RoboData rData;
         EnemyData eData;
 
-        public SteeringBehavior(ref RoboData rData, ref EnemyData eData) 
+        public SteeringBehavior(ref EnemyData eData)
         {
-            this.rData = rData;
             this.eData = eData;
         }
 
-        public Vector2D Flee(Vector2D targetPos, Vector2D vehiclePos, double MAX_SPEED, Vector2D velocity)
+        public Vector2D Flee(Point2D position)
         {
+            //RoboHelpers.CalculateTargetVector(
 
+            Vector2D newDirection = new Vector2D((eData.Position - position).X, (eData.Position - position).Y);
+            newDirection.Normalize();
+            newDirection *= Rules.MAX_VELOCITY;
 
-            Vector2D desiredVelociyNormalized = targetPos - vehiclePos;
-            desiredVelociyNormalized.Normalize();
-            Vector2D desiredVelocity = MAX_SPEED * desiredVelociyNormalized;
-            return desiredVelocity - velocity;
+            return newDirection;
         }
 
         public Point2D Evade(Point2D bulletPos, Point2D vehiclePos) 

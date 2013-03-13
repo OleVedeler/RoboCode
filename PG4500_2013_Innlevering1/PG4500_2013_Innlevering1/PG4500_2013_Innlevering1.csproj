@@ -47,7 +47,6 @@
     <Compile Include="FSM states\Drive\DriveStateEscape.cs" />
     <Compile Include="FSM states\Drive\DriveStateRam.cs" />
     <Compile Include="FSM states\State.cs" />
-    <Compile Include="FSM states\SteeringBehavior.cs" />
     <Compile Include="FSM states\Turret\TurretStateAttack.cs" />
     <Compile Include="FSM states\Turret\TurretStateSaveEnergy.cs" />
     <Compile Include="FSM states\Turret\TurretStateScan.cs" />
@@ -64,6 +63,7 @@
     <Compile Include="HelpClasses\RoboHelpers.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="HelpClasses\SteeringBehavior.cs" />
     <Compile Include="HelpClasses\Vector2D.cs" />
     <Compile Include="Vedole_Joroiv_TheAntSmasher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

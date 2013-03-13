@@ -37,21 +37,45 @@ namespace PG4500_2013_Innlevering1
         EnemyData eData = new EnemyData();
         TurretState currentTurretState = 0;
         DriveState currentDriveState = 0;
+        SteeringBehavior sB;
 
         public override void Run()
         {
-            SetTurnRadarRight(360);
+            IsAdjustGunForRobotTurn = true;
+            IsAdjustRadarForRobotTurn = true;
+            IsAdjustRadarForGunTurn = true;
 
-            DriveStateEscape esc = new DriveStateEscape(ref rData);
+            sB = new SteeringBehavior(ref eData);
+
+            SetTurnRadarLeft(360);
 
             while (true)
             {
-                
-                //esc.Update();
+                currentDriveState = DriveState.ESCAPE;
 
-                //Ahead(rData.ahead);
+                if (currentDriveState == DriveState.ESCAPE)
+                {
+                    //Vector2D way = RoboHelpers.CalculateTargetVector(HeadingRadians, eData.Bearing, eData.Distance);
+                    //way.Normalize();
+                    //way *= Rules.MAX_VELOCITY;
+                    
+                    //double heading = Math.Atan2(way.Y, way.X);
+                    //if (heading < 0)
+                    //    heading += 180;
 
-                Ahead(100);
+                    SetTurnRight(eData.Bearing);
+
+
+                    SetAhead(100);
+                }
+                else if (currentDriveState == DriveState.RAM)
+                {
+                    
+                }
+                else if (currentDriveState == DriveState.AVOID)
+                {
+                    
+                }
 
                 Execute();
             }
@@ -59,6 +83,10 @@ namespace PG4500_2013_Innlevering1
 
         public override void OnScannedRobot(ScannedRobotEvent e)
         {
+            double radarTurn = Heading + e.Bearing - RadarHeading;
+            double radar = 1.9 * Utils.NormalRelativeAngleDegrees(radarTurn);
+            SetTurnRadarRight(radar);
+
             double offSetX = e.Distance * (Math.Cos(RadarHeading));
             double offSetY = e.Distance * (Math.Sin(RadarHeading));
 
