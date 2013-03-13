@@ -47,7 +47,7 @@ namespace PG4500_2013_Innlevering1
             IsAdjustRadarForRobotTurn = true;
             IsAdjustRadarForGunTurn = true;
 
-            sB = new SteeringBehavior(ref eData);
+            sB = new SteeringBehavior(ref eData, this);
 
             SetTurnRadarLeft(360);
 
@@ -62,6 +62,18 @@ namespace PG4500_2013_Innlevering1
                     SetTurnRight(angle);
                     SetAhead(Rules.MAX_VELOCITY);
                     //ADD WALL AVOIDANCE
+                    //Vector2D way = RoboHelpers.CalculateTargetVector(HeadingRadians, eData.Bearing, eData.Distance);
+                    //way.Normalize();
+                    //way *= Rules.MAX_VELOCITY;
+                    
+                    //double heading = Math.Atan2(way.Y, way.X);
+                    //if (heading < 0)
+                    //    heading += 180;
+
+                    //SetTurnRight(eData.Bearing);
+
+					sB.Pursuit();
+                    SetAhead(100);
                 }
                 else if (currentDriveState == DriveState.RAM)
                 {
