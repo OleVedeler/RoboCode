@@ -88,14 +88,19 @@ namespace PG4500_2013_Innlevering1
 				else if(currentTurretState == TurretState.SAVEENERGY)
 				{
 					SetTurnRadarRight(RoboHelpers.RadarToTargetAngleDegrees(Heading, RadarHeading, eData.Bearing));
+					SetTurnGunRight(RoboHelpers.GunToTargetAngleDegrees(Heading, GunHeading, eData.Bearing));
 					// Do nothing?
 				}
 				else if(currentTurretState == TurretState.SCAN)
 				{
-					SetTurnRadarRight(10);
+					SetTurnRadarRight(180);
 				}
-
+				
                 Execute();
+				
+				isOnTarget = false;
+				Scan();
+				
             }
         }
 
