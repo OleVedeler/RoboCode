@@ -36,7 +36,7 @@ namespace PG4500_2013_Innlevering1
         RoboData rData = new RoboData();
         EnemyData eData = new EnemyData();
         TurretState currentTurretState = 0;
-        DriveState currentDriveState = 0;
+        DriveState currentDriveState = DriveState.AVOID;
         SteeringBehavior sB;
 
 		bool isOnTarget = false;
@@ -53,30 +53,28 @@ namespace PG4500_2013_Innlevering1
 
             while (true)
             {
-                currentDriveState = DriveState.ESCAPE;
+                currentDriveState = getDriveState();
 
                 if (currentDriveState == DriveState.ESCAPE)
                 {
-                    //Vector2D way = RoboHelpers.CalculateTargetVector(HeadingRadians, eData.Bearing, eData.Distance);
-                    //way.Normalize();
-                    //way *= Rules.MAX_VELOCITY;
-                    
-                    //double heading = Math.Atan2(way.Y, way.X);
-                    //if (heading < 0)
-                    //    heading += 180;
-
-                    SetTurnRight(eData.Bearing);
-
-
-                    SetAhead(100);
+                    //FLEE
+                    double angle = Utils.NormalRelativeAngleDegrees(eData.Bearing + 180);
+                    SetTurnRight(angle);
+                    SetAhead(Rules.MAX_VELOCITY);
+                    //ADD WALL AVOIDANCE
                 }
                 else if (currentDriveState == DriveState.RAM)
                 {
-                    
+                    //NOW SEEK - CHANGE TO PURUIT
+                    double angle = Utils.NormalRelativeAngleDegrees(eData.Bearing);
+                    SetTurnRight(angle);
+                    SetAhead(Rules.MAX_VELOCITY);
+                    //ADD WALLAVOIDANCE
                 }
                 else if (currentDriveState == DriveState.AVOID)
                 {
-                    
+                    SetAhead(1);
+                    SetTurnLeft(10);
                 }
 
 				getTurretState();
@@ -148,8 +146,22 @@ namespace PG4500_2013_Innlevering1
 
         public DriveState getDriveState()
         {
-            DriveState ret = currentDriveState;
+            DriveState ret;
 
+
+            if (Energy + ((Energy / 100) * 20) < eData.Energy) 
+            {
+                ret = DriveState.ESCAPE;
+            }
+            else if (Energy + ((Energy / 100) * 20) > eData.Energy)
+            {
+                ret = DriveState.RAM;
+            }
+            else
+            {
+                ret = DriveState.AVOID;
+            }
+            /*
             if (currentDriveState == DriveState.ESCAPE)
             {
                 //If more energy; change to RAM
@@ -180,7 +192,7 @@ namespace PG4500_2013_Innlevering1
                 else if (this.Energy == eData.Energy)
                     ret = DriveState.AVOID;
             }
-
+            */
             return ret;
         }
 	}
