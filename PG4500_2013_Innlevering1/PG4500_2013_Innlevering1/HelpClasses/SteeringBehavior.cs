@@ -11,6 +11,8 @@ namespace PG4500_2013_Innlevering1
 {
     class SteeringBehavior
     {
+        public Vector2D leftHorn, midHorn, rightHorn;
+
         EnemyData eData;
 		Vedole_Joroiv_TheAntSmasher robo;
         public SteeringBehavior(ref EnemyData eData, Vedole_Joroiv_TheAntSmasher robo)
@@ -64,12 +66,59 @@ namespace PG4500_2013_Innlevering1
 			robo.SetTurnRight(angle);
 		}
 
-        public Point2D WallAvoidance(Point2D wallPos, Point2D vehiclePos)
+        public void WallAvoidance()
         {
-			double distanceToWall = 10;
-			double lookAhead = 20;
+            int nodeSize = 80; //Pixels
+            //Boolean hasHitWall = false;
 
-            return null;
+            leftHorn = new Vector2D(Math.Sin(Utils.ToRadians(robo.Heading - 45)) * (nodeSize),
+                Math.Cos(Utils.ToRadians(robo.Heading - 45)) * (nodeSize));
+            
+            midHorn = new Vector2D(Math.Sin(Utils.ToRadians(robo.Heading)) * nodeSize, 
+                Math.Cos(Utils.ToRadians(robo.Heading)) * nodeSize);
+            
+            rightHorn = new Vector2D(Math.Sin(Utils.ToRadians(robo.Heading + 45)) * (nodeSize),
+                Math.Cos(Utils.ToRadians(robo.Heading + 45)) * (nodeSize));
+
+            /*
+            middleFeeler = RobotHelpers.GetHeadingVector(robot.HeadingRadians) * feelerLength;
+            leftFeeler = RobotHelpers.GetHeadingVector(robot.HeadingRadians - Math.PI / 5) * sideFeelerLength;
+            rightFeeler = RobotHelpers.GetHeadingVector(robot.HeadingRadians + Math.PI / 5) * sideFeelerLength;
+            */
+
+            leftHorn += robo.Position;
+            midHorn += robo.Position;
+            rightHorn += robo.Position;
+
+            if (midHorn.X < 0 || midHorn.X > robo.BattleFieldWidth ||
+                midHorn.Y < 0 || midHorn.Y > robo.BattleFieldHeight)
+            {
+                robo.SetTurnLeft(10);
+            }
+
+            if (leftHorn.X < 0 || leftHorn.X > robo.BattleFieldWidth ||
+                leftHorn.Y < 0 || leftHorn.Y > robo.BattleFieldHeight)
+            {
+                robo.SetTurnRight(10);
+
+                if (midHorn.X < 0 || midHorn.X > robo.BattleFieldWidth ||
+                midHorn.Y < 0 || midHorn.Y > robo.BattleFieldHeight)
+                {
+                    robo.SetTurnRight(20);
+                }
+            }
+
+            if (rightHorn.X < 0 || rightHorn.X > robo.BattleFieldWidth ||
+                rightHorn.Y < 0 || rightHorn.Y > robo.BattleFieldHeight)
+            {
+                robo.SetTurnLeft(10);
+
+                if (midHorn.X < 0 || midHorn.X > robo.BattleFieldWidth ||
+                midHorn.Y < 0 || midHorn.Y > robo.BattleFieldHeight)
+                {
+                    robo.SetTurnLeft(20);
+                }
+            }
         }
 
         public void OffsetPursuit()

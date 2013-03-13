@@ -48,6 +48,7 @@ namespace PG4500_2013_Innlevering1
             IsAdjustGunForRobotTurn = true;
             IsAdjustRadarForRobotTurn = true;
             IsAdjustRadarForGunTurn = true;
+            SetColors(Color.Black, Color.Gray, Color.Black);
 
             sB = new SteeringBehavior(ref eData, this);
 
@@ -55,33 +56,19 @@ namespace PG4500_2013_Innlevering1
 
             while (true)
             {
-                currentDriveState = DriveState.ESCAPE;
+                currentDriveState = DriveState.AVOID;
                     //getDriveState();
 
-                if (currentDriveState == DriveState.ESCAPE)
+                if (currentDriveState == DriveState.RAM)
                 {
-                    //FLEE
-                    //double angle = Utils.NormalRelativeAngleDegrees(eData.Bearing + 180);
-                    //SetTurnRight(angle);
-                    //SetAhead(Rules.MAX_VELOCITY);
-                    //ADD WALL AVOIDANCE
-                    //Vector2D way = RoboHelpers.CalculateTargetVector(HeadingRadians, eData.Bearing, eData.Distance);
-                    //way.Normalize();
-                    //way *= Rules.MAX_VELOCITY;
-                    
-                    //double heading = Math.Atan2(way.Y, way.X);
-                    //if (heading < 0)
-                    //    heading += 180;
-
-                    //SetTurnRight(eData.Bearing);
-
 					driveVector = sB.Pursuit();
+                    sB.WallAvoidance();
                     SetAhead(100);
                 }
-                else if (currentDriveState == DriveState.RAM)
+                else if (currentDriveState == DriveState.ESCAPE)
                 {
-                    //NOW SEEK - CHANGE TO PURUIT
-                    double angle = Utils.NormalRelativeAngleDegrees(eData.Bearing);
+                    //FLEE
+                    double angle = Utils.NormalRelativeAngleDegrees(eData.Bearing + 180);
                     SetTurnRight(angle);
                     SetAhead(Rules.MAX_VELOCITY);
                     
@@ -89,10 +76,13 @@ namespace PG4500_2013_Innlevering1
                 }
                 else if (currentDriveState == DriveState.AVOID)
                 {
-                    SetAhead(1);
-                    SetTurnLeft(10);
-                }
+                    //Random shit
+                    sB.WallAvoidance();
 
+                    SetAhead(Rules.MAX_VELOCITY);
+
+                }
+                
 				getTurretState();
 
 				if (currentTurretState == TurretState.ATTACK)
@@ -122,8 +112,6 @@ namespace PG4500_2013_Innlevering1
 
         public override void OnScannedRobot(ScannedRobotEvent e)
         {
-            
-
 			isOnTarget = true;
 
             double offSetX = e.Distance * (Math.Sin(RadarHeadingRadians));
@@ -139,8 +127,10 @@ namespace PG4500_2013_Innlevering1
 
         public override void OnPaint(IGraphics graphics)
         {
-
-            RoboHelpers.DrawBulletTarget(graphics, Color.Yellow, new Point2D(Position.X, Position.Y), new Point2D(driveVector.X, driveVector.Y));
+            //RoboHelpers.DrawBulletTarget(graphics, Color.Yellow, new Point2D(Position.X, Position.Y), new Point2D(driveVector.X, driveVector.Y));
+            RoboHelpers.DrawBulletTarget(graphics, Color.Orange, new Point2D(Position.X, Position.Y), new Point2D(sB.leftHorn.X, sB.leftHorn.Y));
+            RoboHelpers.DrawBulletTarget(graphics, Color.Purple, new Point2D(Position.X, Position.Y), new Point2D(sB.midHorn.X, sB.midHorn.Y));
+            RoboHelpers.DrawBulletTarget(graphics, Color.Yellow, new Point2D(Position.X, Position.Y), new Point2D(sB.rightHorn.X, sB.rightHorn.Y));
         }
 
         public void getTurretState()
