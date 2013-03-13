@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Robocode;
 using Robocode.Util;
+using System.Drawing;
 using Santom;
 
 
@@ -69,6 +70,7 @@ namespace PG4500_2013_Innlevering1
                     double angle = Utils.NormalRelativeAngleDegrees(eData.Bearing);
                     SetTurnRight(angle);
                     SetAhead(Rules.MAX_VELOCITY);
+                    
                     //ADD WALLAVOIDANCE
                 }
                 else if (currentDriveState == DriveState.AVOID)
@@ -95,7 +97,7 @@ namespace PG4500_2013_Innlevering1
 				{
 					SetTurnRadarRight(180);
 				}
-				
+
                 Execute();
 				
 				isOnTarget = false;
@@ -118,11 +120,16 @@ namespace PG4500_2013_Innlevering1
             eData.SetEnemyData(Time, e, RoboHelpers.CalculateTargetVector(HeadingRadians,e.BearingRadians,e.Distance), new Point2D(enPos.X, enPos.Y));
         }
 
+        public override void OnPaint(IGraphics graphics)
+        {
+            RoboHelpers.DrawBulletTarget(graphics, Color.Blue, new Point2D(Position.X, Position.Y), eData.Position);
+        }
+
         public void getTurretState()
         {
             if (currentTurretState == TurretState.ATTACK)
             {
-                //10% under 
+                //10% under
                 if (this.Energy + (this.Energy / 20) < eData.Energy)
                     currentTurretState= TurretState.SAVEENERGY;
                 else if (!isOnTarget)
@@ -154,11 +161,11 @@ namespace PG4500_2013_Innlevering1
             DriveState ret;
 
 
-            if (Energy + ((Energy / 100) * 20) < eData.Energy) 
+            if (Energy + ((Energy / 100) * 35) < eData.Energy) 
             {
                 ret = DriveState.ESCAPE;
             }
-            else if (Energy + ((Energy / 100) * 20) > eData.Energy)
+            else if (Energy + ((Energy / 100) * 50) > eData.Energy)
             {
                 ret = DriveState.RAM;
             }
