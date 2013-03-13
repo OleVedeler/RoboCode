@@ -12,6 +12,11 @@ namespace Santom
 	/// </summary>
 	public static class RoboHelpers
 	{
+        public static double DegreesToRadians(double angle)
+        {
+            return angle * (Math.PI / 180);
+        }
+
 		/// <summary>
 		/// Method to draw half-transparent bullet-line & targeting-box (the size of a robot) on the battlefield. 
 		/// The idea is to use this for visual debugging: Set start point to own robot's position, and end point 

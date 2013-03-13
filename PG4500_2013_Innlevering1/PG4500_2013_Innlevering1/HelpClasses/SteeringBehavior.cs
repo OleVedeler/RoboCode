@@ -35,23 +35,33 @@ namespace PG4500_2013_Innlevering1
             return null;
         }
 
-        public void Pursuit()
+
+        public Vector2D Pursuit()
         {
-			double time = eData.Distance / Rules.MAX_VELOCITY;
+            
+            Vector2D newPos = new Vector2D(eData.Position.X,eData.Position.Y);
+            
+            for (int i = 0; i < (int)eData.Distance / Rules.MAX_VELOCITY; i++)
+			{
+			    
+                newPos += new Vector2D(eData.Velocity * Math.Sin(Utils.ToRadians(eData.Heading)),eData.Velocity * Math.Cos(Utils.ToRadians(eData.Heading)));
+			}
 
-			Vector2D newOffset = new Vector2D();
-			newOffset.X = time * eData.Velocity * Math.Cos(eData.Heading);
-			newOffset.Y = time * eData.Velocity * Math.Sin(eData.Heading);
+            Vector2D relativeVector = newPos - robo.Position;
 
-			double angle = Math.Tan((newOffset.Length() / eData.Distance));
+            double enemyPosHeading = Utils.ToDegrees(Math.Atan2(relativeVector.X, relativeVector.Y));
+            
+            double deltaAngle = enemyPosHeading - robo.Heading;
 
-			Seek(angle);
+            Seek(deltaAngle);
+
+            return newPos;
         }
 
 		public void Seek(double turnAngle)
 		{
 			double angle = Utils.NormalRelativeAngleDegrees(turnAngle);
-			robo.SetTurnRight(eData.Bearing + angle);
+			robo.SetTurnRight(angle);
 		}
 
         public Point2D WallAvoidance(Point2D wallPos, Point2D vehiclePos)
@@ -62,9 +72,41 @@ namespace PG4500_2013_Innlevering1
             return null;
         }
 
-        public Point2D OffsetPursuit(Point2D targetPos, Point2D vehiclePos)
+        public void OffsetPursuit()
         {
-            return null;
+            if (eData.Distance > 40)
+                Pursuit();
         }
     }
+
+
+    /*
+     double time = eData.Distance / eData.Velocity;
+
+            Vector2D ePos = new Vector2D(eData.Position.X, eData.Position.Y);
+
+            ePos.X = (eData.Velocity * Math.Sin(Utils.ToRadians(Utils.NormalRelativeAngleDegrees(eData.Heading))));
+            ePos.Y = (eData.Velocity * Math.Cos(Utils.ToRadians(Utils.NormalRelativeAngleDegrees(eData.Heading))));
+            ePos = Vector2D.Normalize(ePos);
+
+            Vector2D newPosition = new Vector2D(robo.Position.X, robo.Position.Y);
+            newPosition.X += ePos.X * time;
+            newPosition.Y += ePos.Y * time;
+
+            double angle = Math.Tan(new Vector2D(newPosition.X - robo.Position.X, newPosition.Y - robo.Position.Y).Length() / eData.Distance);
+
+            /*
+            double time = eData.Distance / Rules.MAX_VELOCITY;
+
+            Vector2D vel = new Vector2D();
+            vel.X = (eData.Velocity * Math.Sin(RoboHelpers.DegreesToRadians(eData.Heading)));
+            vel.Y = (eData.Velocity * Math.Cos(RoboHelpers.DegreesToRadians(eData.Heading)));
+
+			Vector2D newOffset = new Vector2D();
+			newOffset.X = (time * vel.X) * Math.Sin(RoboHelpers.DegreesToRadians(eData.Heading));
+            newOffset.Y = (time * vel.Y) * Math.Cos(RoboHelpers.DegreesToRadians(eData.Heading));
+
+            //Denne formelen er riktig
+			double angle = Math.Tan(newOffset.Length() / eData.Distance);
+            */
 }

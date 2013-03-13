@@ -39,6 +39,7 @@ namespace PG4500_2013_Innlevering1
         TurretState currentTurretState = 0;
         DriveState currentDriveState = DriveState.AVOID;
         SteeringBehavior sB;
+        Vector2D driveVector;
 
 		bool isOnTarget = false;
 
@@ -54,14 +55,15 @@ namespace PG4500_2013_Innlevering1
 
             while (true)
             {
-                currentDriveState = getDriveState();
+                currentDriveState = DriveState.ESCAPE;
+                    //getDriveState();
 
                 if (currentDriveState == DriveState.ESCAPE)
                 {
                     //FLEE
-                    double angle = Utils.NormalRelativeAngleDegrees(eData.Bearing + 180);
-                    SetTurnRight(angle);
-                    SetAhead(Rules.MAX_VELOCITY);
+                    //double angle = Utils.NormalRelativeAngleDegrees(eData.Bearing + 180);
+                    //SetTurnRight(angle);
+                    //SetAhead(Rules.MAX_VELOCITY);
                     //ADD WALL AVOIDANCE
                     //Vector2D way = RoboHelpers.CalculateTargetVector(HeadingRadians, eData.Bearing, eData.Distance);
                     //way.Normalize();
@@ -73,7 +75,7 @@ namespace PG4500_2013_Innlevering1
 
                     //SetTurnRight(eData.Bearing);
 
-					sB.Pursuit();
+					driveVector = sB.Pursuit();
                     SetAhead(100);
                 }
                 else if (currentDriveState == DriveState.RAM)
@@ -120,21 +122,25 @@ namespace PG4500_2013_Innlevering1
 
         public override void OnScannedRobot(ScannedRobotEvent e)
         {
+            
+
+			isOnTarget = true;
+
+            double offSetX = e.Distance * (Math.Sin(RadarHeadingRadians));
+            double offSetY = e.Distance * (Math.Cos(RadarHeadingRadians));
+
+            Vector2D enPos = Position + new Vector2D(offSetX, offSetY);
+            eData.SetEnemyData(Time, e, new Vector2D(offSetX, offSetY), new Point2D(enPos.X, enPos.Y));
+
             double radarTurn = Heading + e.Bearing - RadarHeading;
             double radar = 1.9 * Utils.NormalRelativeAngleDegrees(radarTurn);
             SetTurnRadarRight(radar);
-
-			isOnTarget = true;
-            double offSetX = e.Distance * (Math.Cos(RadarHeading));
-            double offSetY = e.Distance * (Math.Sin(RadarHeading));
-
-            Vector2D enPos = this.Position + new Vector2D(offSetX, offSetY);
-            eData.SetEnemyData(Time, e, RoboHelpers.CalculateTargetVector(HeadingRadians,e.BearingRadians,e.Distance), new Point2D(enPos.X, enPos.Y));
         }
 
         public override void OnPaint(IGraphics graphics)
         {
-            RoboHelpers.DrawBulletTarget(graphics, Color.Blue, new Point2D(Position.X, Position.Y), eData.Position);
+
+            RoboHelpers.DrawBulletTarget(graphics, Color.Yellow, new Point2D(Position.X, Position.Y), new Point2D(driveVector.X, driveVector.Y));
         }
 
         public void getTurretState()
