@@ -39,6 +39,8 @@ namespace PG4500_2013_Innlevering1
         DriveState currentDriveState = 0;
         SteeringBehavior sB;
 
+		bool isOnTarget = false;
+
         public override void Run()
         {
             IsAdjustGunForRobotTurn = true;
@@ -77,6 +79,24 @@ namespace PG4500_2013_Innlevering1
                     
                 }
 
+				getTurretState();
+
+				if (currentTurretState == TurretState.ATTACK)
+				{
+					SetTurnRadarRight(RoboHelpers.RadarToTargetAngleDegrees(Heading, RadarHeading, eData.Bearing));
+					SetTurnGunRight(RoboHelpers.GunToTargetAngleDegrees(Heading,GunHeading, eData.Bearing));
+					SetFire(1);
+				}
+				else if(currentTurretState == TurretState.SAVEENERGY)
+				{
+					SetTurnRadarRight(RoboHelpers.RadarToTargetAngleDegrees(Heading, RadarHeading, eData.Bearing));
+					// Do nothing?
+				}
+				else if(currentTurretState == TurretState.SCAN)
+				{
+					SetTurnRadarRight(10);
+				}
+
                 Execute();
             }
         }
@@ -87,49 +107,43 @@ namespace PG4500_2013_Innlevering1
             double radar = 1.9 * Utils.NormalRelativeAngleDegrees(radarTurn);
             SetTurnRadarRight(radar);
 
+			isOnTarget = true;
             double offSetX = e.Distance * (Math.Cos(RadarHeading));
             double offSetY = e.Distance * (Math.Sin(RadarHeading));
 
             Vector2D enPos = this.Position + new Vector2D(offSetX, offSetY);
-
-            eData.SetEnemyData(Time, e, new Vector2D(offSetX, offSetY), new Point2D(enPos.X, enPos.Y));
-
-
+            eData.SetEnemyData(Time, e, RoboHelpers.CalculateTargetVector(HeadingRadians,e.BearingRadians,e.Distance), new Point2D(enPos.X, enPos.Y));
         }
 
-        public TurretState getTurretState()
+        public void getTurretState()
         {
-            TurretState ret = currentTurretState;
-            
             if (currentTurretState == TurretState.ATTACK)
             {
                 //10% under 
-                if (this.Energy + (this.Energy / 10) < eData.Energy)
-                    ret = TurretState.SAVEENERGY;
-                else if (!rData.isOnTarget)
-                    ret = TurretState.SCAN;
+                if (this.Energy + (this.Energy / 20) < eData.Energy)
+                    currentTurretState= TurretState.SAVEENERGY;
+                else if (!isOnTarget)
+                    currentTurretState= TurretState.SCAN;
      
             }
             else if (currentTurretState == TurretState.SAVEENERGY)
             {
                 //if enemy has a set portion less health then you: attack
-                if (this.Energy + (this.Energy / 10) > eData.Energy)
-                    ret = TurretState.ATTACK;
-                else if (!rData.isOnTarget)
-                    ret = TurretState.SCAN;
+                if (this.Energy + (this.Energy / 20) > eData.Energy)
+                    currentTurretState= TurretState.ATTACK;
+                else if (!isOnTarget)
+                    currentTurretState= TurretState.SCAN;
             }
             else if (currentTurretState == TurretState.SCAN)
             {
-                if (rData.isOnTarget)
+                if (isOnTarget)
                 {
-                    if (this.Energy + (this.Energy / 10) < eData.Energy)
-                        ret = TurretState.SAVEENERGY;
-                    if (this.Energy + (this.Energy / 10) >= eData.Energy)
-                        ret = TurretState.ATTACK;
+                    if (this.Energy + (this.Energy / 20) < eData.Energy)
+                        currentTurretState= TurretState.SAVEENERGY;
+                    if (this.Energy + (this.Energy / 20) >= eData.Energy)
+                        currentTurretState= TurretState.ATTACK;
                 }
             }
-
-            return ret;
         }
 
         public DriveState getDriveState()

@@ -51,7 +51,7 @@ namespace Santom
 													 double gunHeadingDegrees,
 													 double bearingToTargetDegrees)
 		{
-			return Utils.NormalRelativeAngleDegrees(robotHeadingDegrees + bearingToTargetDegrees - gunHeadingDegrees);
+			return 1.9 * Utils.NormalRelativeAngleDegrees(robotHeadingDegrees + bearingToTargetDegrees - gunHeadingDegrees);
 		}
 
 
@@ -62,7 +62,7 @@ namespace Santom
 													   double radarHeadingDegrees,
 													   double bearingToTargetDegrees)
 		{
-			return Utils.NormalRelativeAngleDegrees(robotHeadingDegrees + bearingToTargetDegrees - radarHeadingDegrees);
+			return 1.9 * Utils.NormalRelativeAngleDegrees(robotHeadingDegrees + bearingToTargetDegrees - radarHeadingDegrees);
 		}
 	}
 }

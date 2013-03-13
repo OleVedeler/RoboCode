@@ -40,6 +40,9 @@ namespace PG4500_2013_Innlevering1
 
         public Point2D WallAvoidance(Point2D wallPos, Point2D vehiclePos)
         {
+			double distanceToWall = 10;
+			double lookAhead = 20;
+
             return null;
         }
 
