@@ -53,37 +53,34 @@ namespace PG4500_2013_Innlevering1
 
             sB = new SteeringBehavior(ref eData, this);
 			shootVector = new Vector2D();
+			driveVector = new Vector2D();
             SetTurnRadarLeft(360);
+			sB.WallAvoidance();
 
             while (true)
             {
                 currentDriveState = DriveState.AVOID;
-                    //getDriveState();
+                //getDriveState();
 
-                if (currentDriveState == DriveState.RAM)
+				if (currentDriveState == DriveState.RAM)
                 {
 					driveVector = sB.Pursuit();
-                    sB.WallAvoidance();
-                    SetAhead(100);
                 }
                 else if (currentDriveState == DriveState.ESCAPE)
                 {
                     //FLEE
                     double angle = Utils.NormalRelativeAngleDegrees(eData.Bearing + 180);
-                    SetTurnRight(angle);
-                    SetAhead(Rules.MAX_VELOCITY);
-                    
-                    //ADD WALLAVOIDANCE
-                }
+                    SetTurnRight(angle);    
+				}
                 else if (currentDriveState == DriveState.AVOID)
                 {
                     //Random shit
-                    sB.WallAvoidance();
-
-                    SetAhead(Rules.MAX_VELOCITY);
-
+					sB.Evade();
                 }
-                
+
+				sB.WallAvoidance();
+				SetAhead(100);
+
 				getTurretState();
 
 				if (currentTurretState == TurretState.ATTACK)
@@ -92,13 +89,13 @@ namespace PG4500_2013_Innlevering1
 					//SetTurnGunRight(RoboHelpers.GunToTargetAngleDegrees(Heading,GunHeading, eData.Bearing));
 					shootVector = sB.AimInFront();
 
-					SetFire(Rules.MAX_BULLET_POWER);
+					//SetFire(Rules.MAX_BULLET_POWER);
 				}
 				else if(currentTurretState == TurretState.SAVEENERGY)
 				{
 					SetTurnRadarRight(RoboHelpers.RadarToTargetAngleDegrees(Heading, RadarHeading, eData.Bearing));
 					shootVector = sB.AimInFront();
-					SetFire(Rules.MAX_BULLET_POWER);
+					//SetFire(Rules.MAX_BULLET_POWER);
 					// Do nothing?
 				}
 				else if(currentTurretState == TurretState.SCAN)
@@ -133,7 +130,6 @@ namespace PG4500_2013_Innlevering1
 		
         public override void OnPaint(IGraphics graphics)
         {
-            //RoboHelpers.DrawBulletTarget(graphics, Color.Yellow, new Point2D(Position.X, Position.Y), new Point2D(driveVector.X, driveVector.Y));
             RoboHelpers.DrawBulletTarget(graphics, Color.Orange, new Point2D(Position.X, Position.Y), new Point2D(sB.leftHorn.X, sB.leftHorn.Y));
             RoboHelpers.DrawBulletTarget(graphics, Color.Purple, new Point2D(Position.X, Position.Y), new Point2D(sB.midHorn.X, sB.midHorn.Y));
             RoboHelpers.DrawBulletTarget(graphics, Color.Yellow, new Point2D(Position.X, Position.Y), new Point2D(sB.rightHorn.X, sB.rightHorn.Y));
@@ -172,22 +168,19 @@ namespace PG4500_2013_Innlevering1
             }
         }
 
-        public DriveState getDriveState()
+        public void getDriveState()
         {
-            DriveState ret;
-
-
             if (Energy + ((Energy / 100) * 35) < eData.Energy) 
             {
-                ret = DriveState.ESCAPE;
+                currentDriveState = DriveState.ESCAPE;
             }
             else if (Energy + ((Energy / 100) * 50) > eData.Energy)
             {
-                ret = DriveState.RAM;
+                currentDriveState = DriveState.RAM;
             }
             else
             {
-                ret = DriveState.AVOID;
+                currentDriveState = DriveState.AVOID;
             }
             /*
             if (currentDriveState == DriveState.ESCAPE)
@@ -221,7 +214,6 @@ namespace PG4500_2013_Innlevering1
                     ret = DriveState.AVOID;
             }
             */
-            return ret;
         }
 	}
 }

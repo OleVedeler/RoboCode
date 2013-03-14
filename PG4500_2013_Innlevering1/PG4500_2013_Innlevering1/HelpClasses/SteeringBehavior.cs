@@ -23,8 +23,6 @@ namespace PG4500_2013_Innlevering1
 
         public Vector2D Flee(Point2D position)
         {
-            //RoboHelpers.CalculateTargetVector(
-
             Vector2D newDirection = new Vector2D((eData.Position - position).X, (eData.Position - position).Y);
             newDirection.Normalize();
             newDirection *= Rules.MAX_VELOCITY;
@@ -32,9 +30,16 @@ namespace PG4500_2013_Innlevering1
             return newDirection;
         }
 
-        public Point2D Evade(Point2D bulletPos, Point2D vehiclePos) 
+		double PreEnergy = 100;
+        public void Evade() 
         {
-            return null;
+			if (eData.Energy != PreEnergy)// && eData.Energy - PreEnergy < 3)
+			{
+				double powerShoot = eData.Energy - PreEnergy;
+				PreEnergy = eData.Energy;
+				
+				double Time = eData.Distance / (20 - 3 * powerShoot);
+			}
         }
 
 
@@ -67,7 +72,7 @@ namespace PG4500_2013_Innlevering1
 
         public void WallAvoidance()
         {
-            int nodeSize = 80; //Pixels
+            int nodeSize = 200; //Pixels
             //Boolean hasHitWall = false;
 
             leftHorn = new Vector2D(Math.Sin(Utils.ToRadians(robo.Heading - 45)) * (nodeSize),
@@ -130,12 +135,11 @@ namespace PG4500_2013_Innlevering1
 		{
 			Vector2D newPos = new Vector2D(eData.Position.X, eData.Position.Y);
 			Vector2D BulletPos = new Vector2D(robo.Position.X, robo.Position.Y);
-			int lengthPerTurn = (int)Math.Round(eData.Distance / (Rules.MAX_VELOCITY + (20 - 3 * Rules.MIN_BULLET_POWER)));
+			int lengthPerTurn = (int)Math.Round(eData.Distance / (20 - 3 * Rules.MIN_BULLET_POWER));
 			
-			for (int i = 0; BulletPos == newPos; i++)
+			for (int i = 0; i < lengthPerTurn; i++)
 			{
 				newPos += new Vector2D(eData.Velocity * Math.Sin(Utils.ToRadians(eData.Heading)), eData.Velocity * Math.Cos(Utils.ToRadians(eData.Heading)));
-				BulletPos += new Vector2D((20 - 3 * Rules.MIN_BULLET_POWER) * Math.Sin(Utils.ToRadians(robo.Heading)), (20 - 3 * Rules.MIN_BULLET_POWER)  * Math.Cos(Utils.ToRadians(robo.Heading)));
 			}
 
 			Vector2D relativeVector = newPos - robo.Position;
