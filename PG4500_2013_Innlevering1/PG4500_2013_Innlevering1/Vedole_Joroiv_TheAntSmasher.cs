@@ -40,6 +40,7 @@ namespace PG4500_2013_Innlevering1
         DriveState currentDriveState = DriveState.AVOID;
         SteeringBehavior sB;
         Vector2D driveVector;
+		Vector2D shootVector;
 
 		bool isOnTarget = false;
 
@@ -51,7 +52,7 @@ namespace PG4500_2013_Innlevering1
             SetColors(Color.Black, Color.Gray, Color.Black);
 
             sB = new SteeringBehavior(ref eData, this);
-
+			shootVector = new Vector2D();
             SetTurnRadarLeft(360);
 
             while (true)
@@ -88,13 +89,16 @@ namespace PG4500_2013_Innlevering1
 				if (currentTurretState == TurretState.ATTACK)
 				{
 					SetTurnRadarRight(RoboHelpers.RadarToTargetAngleDegrees(Heading, RadarHeading, eData.Bearing));
-					SetTurnGunRight(RoboHelpers.GunToTargetAngleDegrees(Heading,GunHeading, eData.Bearing));
-					SetFire(1);
+					//SetTurnGunRight(RoboHelpers.GunToTargetAngleDegrees(Heading,GunHeading, eData.Bearing));
+					shootVector = sB.AimInFront();
+
+					SetFire(Rules.MAX_BULLET_POWER);
 				}
 				else if(currentTurretState == TurretState.SAVEENERGY)
 				{
 					SetTurnRadarRight(RoboHelpers.RadarToTargetAngleDegrees(Heading, RadarHeading, eData.Bearing));
-					SetTurnGunRight(RoboHelpers.GunToTargetAngleDegrees(Heading, GunHeading, eData.Bearing));
+					shootVector = sB.AimInFront();
+					SetFire(Rules.MAX_BULLET_POWER);
 					// Do nothing?
 				}
 				else if(currentTurretState == TurretState.SCAN)
@@ -125,12 +129,16 @@ namespace PG4500_2013_Innlevering1
             SetTurnRadarRight(radar);
         }
 
+
+		
         public override void OnPaint(IGraphics graphics)
         {
             //RoboHelpers.DrawBulletTarget(graphics, Color.Yellow, new Point2D(Position.X, Position.Y), new Point2D(driveVector.X, driveVector.Y));
             RoboHelpers.DrawBulletTarget(graphics, Color.Orange, new Point2D(Position.X, Position.Y), new Point2D(sB.leftHorn.X, sB.leftHorn.Y));
             RoboHelpers.DrawBulletTarget(graphics, Color.Purple, new Point2D(Position.X, Position.Y), new Point2D(sB.midHorn.X, sB.midHorn.Y));
             RoboHelpers.DrawBulletTarget(graphics, Color.Yellow, new Point2D(Position.X, Position.Y), new Point2D(sB.rightHorn.X, sB.rightHorn.Y));
+            RoboHelpers.DrawBulletTarget(graphics, Color.Yellow, new Point2D(Position.X, Position.Y), new Point2D(driveVector.X, driveVector.Y));
+			RoboHelpers.DrawBulletTarget(graphics, Color.Green, new Point2D(Position.X, Position.Y), new Point2D(shootVector.X, shootVector.Y));
         }
 
         public void getTurretState()
