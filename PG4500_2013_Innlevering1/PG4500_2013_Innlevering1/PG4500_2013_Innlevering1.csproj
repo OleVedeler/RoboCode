@@ -55,7 +55,6 @@
     <Compile Include="HelpClasses\Point2D.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="HelpClasses\RoboData.cs" />
     <Compile Include="HelpClasses\RoboHelpers.cs">
       <SubType>Code</SubType>
     </Compile>

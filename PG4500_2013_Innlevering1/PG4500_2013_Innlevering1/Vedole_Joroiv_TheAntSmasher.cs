@@ -34,7 +34,6 @@ namespace PG4500_2013_Innlevering1
             get { return new Vector2D(this.X, this.Y); }
         }
 
-        RoboData rData = new RoboData();
         EnemyData eData = new EnemyData();
         TurretState currentTurretState = 0;
         DriveState currentDriveState = DriveState.AVOID;
