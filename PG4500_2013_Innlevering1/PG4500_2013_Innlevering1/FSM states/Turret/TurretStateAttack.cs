@@ -9,35 +9,38 @@ namespace PG4500_2013_Innlevering1.FSM_states.Turret
 {
 	class TurretStateAttack : State
 	{
-		public TurretStateAttack(ref RoboData rData, ref EnemyData eData)
+		public TurretStateAttack()
 		{
-			this.rData = rData;
-			this.eData = eData;
+
 		}
 
-		public override void Update()
+		public List<string> GetAction()
 		{
 
-			//scan og sikt forran fienden og skyt der du tror den skal være
-			rData.rotationRadarLeft = RoboHelpers.RadarToTargetAngleDegrees(rData.Robotheading, rData.RadarHeading, eData.Bearing);
+			/*List<string> stringlist = new List<string>();
+			//10% under
+			if (this.Energy + (this.Energy / 20) < eData.Energy)
+				stringlist.Add("SAVEENERGY");
+			else if (!isOnTarget)
+				currentTurretState = TurretState.SCAN;
+			*/
 
-			/*eData.Velocity;
-			eData.Heading;
-			eData.Time;
-			eData.Distance;
-		*/
-			base.Update();
+			return null;
 		}
 
-		public override int GetNewState()
+		public string GetEntryAction()
 		{
-			if (!rData.isOnTarget)
-				return (int)TurretState.SCAN;
-			// 10% under
-			else if (rData.energy + (rData.energy / 10) < eData.Energy)
-				return (int)TurretState.SAVEENERGY;
-			else
-				return (int)TurretState.ATTACK;
+			throw new NotImplementedException();
+		}
+
+		public string GetExitAction()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Transition[] GetTransitions()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

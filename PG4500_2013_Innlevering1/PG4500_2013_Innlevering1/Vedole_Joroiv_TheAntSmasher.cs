@@ -41,6 +41,8 @@ namespace PG4500_2013_Innlevering1
         SteeringBehavior sB;
         Vector2D driveVector;
 		Vector2D shootVector;
+		double bulletStrength = 0;
+		public int moveDir = 1;
 
 		bool isOnTarget = false;
 
@@ -55,53 +57,58 @@ namespace PG4500_2013_Innlevering1
 			shootVector = new Vector2D();
 			driveVector = new Vector2D();
             SetTurnRadarLeft(360);
+			
+			// used first in paint, so fast init it
 			sB.WallAvoidance();
-
             while (true)
             {
-                currentDriveState = DriveState.AVOID;
-                //getDriveState();
+                getDriveState();
 
 				if (currentDriveState == DriveState.RAM)
                 {
+					Console.WriteLine("DriveState.RAM");
 					driveVector = sB.Pursuit();
                 }
                 else if (currentDriveState == DriveState.ESCAPE)
                 {
                     //FLEE
-                    double angle = Utils.NormalRelativeAngleDegrees(eData.Bearing + 180);
-                    SetTurnRight(angle);    
+					Console.WriteLine("DriveState.ESCAPE");
+					sB.OffsetPursuit();   
 				}
                 else if (currentDriveState == DriveState.AVOID)
                 {
-                    //Random shit
+					Console.WriteLine("DriveState.AVOID");
 					sB.Evade();
                 }
 
 				sB.WallAvoidance();
-				SetAhead(100);
+				SetAhead(100 * moveDir);
+				Execute();
 
 				getTurretState();
 
 				if (currentTurretState == TurretState.ATTACK)
 				{
-					SetTurnRadarRight(RoboHelpers.RadarToTargetAngleDegrees(Heading, RadarHeading, eData.Bearing));
-					//SetTurnGunRight(RoboHelpers.GunToTargetAngleDegrees(Heading,GunHeading, eData.Bearing));
-					shootVector = sB.AimInFront();
-
-					//SetFire(Rules.MAX_BULLET_POWER);
+					bulletStrength = Math.Min(400 / eData.Distance, 3);
+					Console.WriteLine("TurretState.ATTACK");
+					shootVector = sB.AimInFront(bulletStrength);
 				}
 				else if(currentTurretState == TurretState.SAVEENERGY)
 				{
-					SetTurnRadarRight(RoboHelpers.RadarToTargetAngleDegrees(Heading, RadarHeading, eData.Bearing));
-					shootVector = sB.AimInFront();
-					//SetFire(Rules.MAX_BULLET_POWER);
-					// Do nothing?
+
+					Console.WriteLine("TurretState.SAVEENERGY");
+					bulletStrength = Math.Min( 200 / eData.Distance, 3);
+					shootVector = sB.AimInFront(bulletStrength);
 				}
 				else if(currentTurretState == TurretState.SCAN)
 				{
+					Console.WriteLine("TurretState.SCAN");
 					SetTurnRadarRight(180);
 				}
+				Console.WriteLine("bulletStrength: " + bulletStrength);
+
+				if (Math.Abs(GunTurnRemaining) < 1)
+					SetFire(bulletStrength);
 
                 Execute();
 				
@@ -114,7 +121,6 @@ namespace PG4500_2013_Innlevering1
         public override void OnScannedRobot(ScannedRobotEvent e)
         {
 			isOnTarget = true;
-
             double offSetX = e.Distance * (Math.Sin(RadarHeadingRadians));
             double offSetY = e.Distance * (Math.Cos(RadarHeadingRadians));
 
@@ -174,7 +180,7 @@ namespace PG4500_2013_Innlevering1
             {
                 currentDriveState = DriveState.ESCAPE;
             }
-            else if (Energy + ((Energy / 100) * 50) > eData.Energy)
+			else if (Energy > eData.Energy)
             {
                 currentDriveState = DriveState.RAM;
             }
@@ -182,38 +188,6 @@ namespace PG4500_2013_Innlevering1
             {
                 currentDriveState = DriveState.AVOID;
             }
-            /*
-            if (currentDriveState == DriveState.ESCAPE)
-            {
-                //If more energy; change to RAM
-                if (this.Energy > eData.Energy) 
-                    ret = DriveState.RAM;
-
-                //If the same energy; change to AVOID
-                else if (this.Energy == eData.Energy) 
-                    ret = DriveState.AVOID;
-            }
-            else if (currentDriveState == DriveState.AVOID)
-            {
-                //If lower life change to ESCAPE
-                if (this.Energy > eData.Energy)
-                    ret = DriveState.RAM;
-
-                //If the same energy; change to AVOID
-                else if (this.Energy < eData.Energy)
-                    ret = DriveState.ESCAPE;
-            }
-            else if (currentDriveState == DriveState.RAM)
-            {
-                //If lower life change to ESCAPE
-                if (this.Energy < eData.Energy)
-                    ret = DriveState.ESCAPE;
-
-                //If the same energy; change to AVOID
-                else if (this.Energy == eData.Energy)
-                    ret = DriveState.AVOID;
-            }
-            */
         }
 	}
 }

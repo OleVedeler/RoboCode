@@ -15,30 +15,29 @@ namespace PG4500_2013_Innlevering1
 
         EnemyData eData;
 		Vedole_Joroiv_TheAntSmasher robo;
+		double oldEnemyHeading;
         public SteeringBehavior(ref EnemyData eData, Vedole_Joroiv_TheAntSmasher robo)
         {
 			this.robo = robo;
             this.eData = eData;
+			oldEnemyHeading = eData.Heading;
         }
 
-        public Vector2D Flee(Point2D position)
+        public void Flee()
         {
-            Vector2D newDirection = new Vector2D((eData.Position - position).X, (eData.Position - position).Y);
-            newDirection.Normalize();
-            newDirection *= Rules.MAX_VELOCITY;
-
-            return newDirection;
+			robo.SetTurnRight(Utils.NormalRelativeAngleDegrees(eData.Bearing - 180));
         }
 
 		double PreEnergy = 100;
         public void Evade() 
         {
-			if (eData.Energy != PreEnergy)// && eData.Energy - PreEnergy < 3)
+			//Setter vår robot 90 grader på hans så det er lettere å evade sidelangs
+			robo.SetTurnRight(eData.Bearing + 90);
+			if (PreEnergy != eData.Energy)
 			{
-				double powerShoot = eData.Energy - PreEnergy;
+				if(PreEnergy - eData.Energy <= 3)
+					robo.moveDir *= -1;
 				PreEnergy = eData.Energy;
-				
-				double Time = eData.Distance / (20 - 3 * powerShoot);
 			}
         }
 
@@ -72,23 +71,16 @@ namespace PG4500_2013_Innlevering1
 
         public void WallAvoidance()
         {
-            int nodeSize = 200; //Pixels
-            //Boolean hasHitWall = false;
+            int nodeSize = 150; //Pixels
 
-            leftHorn = new Vector2D(Math.Sin(Utils.ToRadians(robo.Heading - 45)) * (nodeSize),
-                Math.Cos(Utils.ToRadians(robo.Heading - 45)) * (nodeSize));
-            
-            midHorn = new Vector2D(Math.Sin(Utils.ToRadians(robo.Heading)) * nodeSize, 
-                Math.Cos(Utils.ToRadians(robo.Heading)) * nodeSize);
-            
-            rightHorn = new Vector2D(Math.Sin(Utils.ToRadians(robo.Heading + 45)) * (nodeSize),
-                Math.Cos(Utils.ToRadians(robo.Heading + 45)) * (nodeSize));
+            leftHorn = new Vector2D(Math.Sin(Utils.ToRadians(robo.Heading - 45)) * (nodeSize) * robo.moveDir,
+                Math.Cos(Utils.ToRadians(robo.Heading - 45)) * (nodeSize) * robo.moveDir);
 
-            /*
-            middleFeeler = RobotHelpers.GetHeadingVector(robot.HeadingRadians) * feelerLength;
-            leftFeeler = RobotHelpers.GetHeadingVector(robot.HeadingRadians - Math.PI / 5) * sideFeelerLength;
-            rightFeeler = RobotHelpers.GetHeadingVector(robot.HeadingRadians + Math.PI / 5) * sideFeelerLength;
-            */
+			midHorn = new Vector2D(Math.Sin(Utils.ToRadians(robo.Heading)) * nodeSize * robo.moveDir,
+				Math.Cos(Utils.ToRadians(robo.Heading)) * nodeSize * robo.moveDir);
+
+			rightHorn = new Vector2D(Math.Sin(Utils.ToRadians(robo.Heading + 45)) * (nodeSize) * robo.moveDir,
+				Math.Cos(Utils.ToRadians(robo.Heading + 45)) * (nodeSize) * robo.moveDir);
 
             leftHorn += robo.Position;
             midHorn += robo.Position;
@@ -125,32 +117,45 @@ namespace PG4500_2013_Innlevering1
             }
         }
 
+		// følger etter fienden så lenge det er på avstand
         public void OffsetPursuit()
         {
-            if (eData.Distance > 40)
-                Pursuit();
+			if (eData.Distance > 600)
+				Pursuit();
+			else
+				Flee();
         }
 
-		public Vector2D AimInFront()
-		{
-			Vector2D newPos = new Vector2D(eData.Position.X, eData.Position.Y);
-			Vector2D BulletPos = new Vector2D(robo.Position.X, robo.Position.Y);
-			int lengthPerTurn = (int)Math.Round(eData.Distance / (20 - 3 * Rules.MIN_BULLET_POWER));
-			
-			for (int i = 0; i < lengthPerTurn; i++)
+		// Finner farten og tiden det tar for kullen å gå avstanden
+		// Finner hvor tanken vil være i samme tidsrom
+		// Finner vinkelen du må skyte for å treffe tanksen
+		// returnerer en vector for å kunne tegne boksen.
+		public Vector2D AimInFront(double Firepower)
+		{			
+			double bulletSpeed = (20 - Firepower * 3);
+			long time = (long)(eData.Distance / bulletSpeed);
+
+			Vector2D FuturePos = new Vector2D(
+				eData.Position.X + Math.Sin(Utils.ToRadians(eData.Heading)) * eData.Velocity * time, 
+				eData.Position.Y + Math.Cos(Utils.ToRadians(eData.Heading)) * eData.Velocity * time);
+
+			double enemyHeadingChange = eData.Heading - oldEnemyHeading;
+			oldEnemyHeading = eData.Heading;
+
+			if (Math.Abs(eData.TurnRate) > 0)
 			{
-				newPos += new Vector2D(eData.Velocity * Math.Sin(Utils.ToRadians(eData.Heading)), eData.Velocity * Math.Cos(Utils.ToRadians(eData.Heading)));
+				FuturePos = new Vector2D(
+					eData.Position.X + Math.Sin(Utils.ToRadians(eData.Heading + enemyHeadingChange)) * eData.Velocity * time,
+					eData.Position.Y + Math.Cos(Utils.ToRadians(eData.Heading + enemyHeadingChange)) * eData.Velocity * time);
 			}
 
-			Vector2D relativeVector = newPos - robo.Position;
-
-            double enemyPosHeading = Utils.ToDegrees(Math.Atan2(relativeVector.X, relativeVector.Y));
-            
+            double enemyPosHeading = Utils.ToDegrees(Math.Atan2(FuturePos.X - robo.Position.X, FuturePos.Y - robo.Position.Y));
+			
             double deltaAngle = enemyPosHeading - robo.GunHeading;
 
 			robo.SetTurnGunRight(Utils.NormalRelativeAngleDegrees(deltaAngle));
-			
-			return newPos;
+
+			return FuturePos;
 		}
     }
 }

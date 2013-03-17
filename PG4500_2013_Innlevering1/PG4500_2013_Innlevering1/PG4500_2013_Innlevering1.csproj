@@ -43,13 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FSM states\Drive\DriveStateAvoid.cs" />
-    <Compile Include="FSM states\Drive\DriveStateEscape.cs" />
-    <Compile Include="FSM states\Drive\DriveStateRam.cs" />
     <Compile Include="FSM states\State.cs" />
-    <Compile Include="FSM states\Turret\TurretStateAttack.cs" />
-    <Compile Include="FSM states\Turret\TurretStateSaveEnergy.cs" />
-    <Compile Include="FSM states\Turret\TurretStateScan.cs" />
+    <Compile Include="FSM states\StateMachine.cs" />
+    <Compile Include="FSM states\Transition.cs" />
     <Compile Include="HelpClasses\BulletData.cs">
       <SubType>Code</SubType>
     </Compile>
