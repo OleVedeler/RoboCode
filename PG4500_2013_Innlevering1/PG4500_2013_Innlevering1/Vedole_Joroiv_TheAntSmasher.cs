@@ -62,6 +62,7 @@ namespace PG4500_2013_Innlevering1
 			sB.WallAvoidance();
             while (true)
             {
+
                 getDriveState();
 
 				if (currentDriveState == DriveState.RAM)
@@ -83,16 +84,18 @@ namespace PG4500_2013_Innlevering1
 
 				sB.WallAvoidance();
 				SetAhead(100 * moveDir);
-				Execute();
 
 				getTurretState();
 
+				//Bruker mye energi på kuler i attack
 				if (currentTurretState == TurretState.ATTACK)
 				{
+				
 					bulletStrength = Math.Min(400 / eData.Distance, 3);
 					Console.WriteLine("TurretState.ATTACK");
 					shootVector = sB.AimInFront(bulletStrength);
 				}
+				// Sparer energi ved å ha svakere kuler
 				else if(currentTurretState == TurretState.SAVEENERGY)
 				{
 
@@ -105,7 +108,6 @@ namespace PG4500_2013_Innlevering1
 					Console.WriteLine("TurretState.SCAN");
 					SetTurnRadarRight(180);
 				}
-				Console.WriteLine("bulletStrength: " + bulletStrength);
 
 				if (Math.Abs(GunTurnRemaining) < 1)
 					SetFire(bulletStrength);
@@ -120,20 +122,20 @@ namespace PG4500_2013_Innlevering1
 
         public override void OnScannedRobot(ScannedRobotEvent e)
         {
+			// Setter den nødvendige informasjonen
 			isOnTarget = true;
             double offSetX = e.Distance * (Math.Sin(RadarHeadingRadians));
             double offSetY = e.Distance * (Math.Cos(RadarHeadingRadians));
 
             Vector2D enPos = Position + new Vector2D(offSetX, offSetY);
             eData.SetEnemyData(Time, e, new Vector2D(offSetX, offSetY), new Point2D(enPos.X, enPos.Y));
-
+			
+			// Holder radaren på fienden
             double radarTurn = Heading + e.Bearing - RadarHeading;
             double radar = 1.9 * Utils.NormalRelativeAngleDegrees(radarTurn);
             SetTurnRadarRight(radar);
         }
 
-
-		
         public override void OnPaint(IGraphics graphics)
         {
             RoboHelpers.DrawBulletTarget(graphics, Color.Orange, new Point2D(Position.X, Position.Y), new Point2D(sB.leftHorn.X, sB.leftHorn.Y));
@@ -147,17 +149,16 @@ namespace PG4500_2013_Innlevering1
         {
             if (currentTurretState == TurretState.ATTACK)
             {
-                //10% under
-                if (this.Energy + (this.Energy / 20) < eData.Energy)
+                //10% under fiendens energi
+                if (this.Energy + ((this.Energy / 100) * 10)  < eData.Energy)
                     currentTurretState= TurretState.SAVEENERGY;
                 else if (!isOnTarget)
                     currentTurretState= TurretState.SCAN;
-     
             }
             else if (currentTurretState == TurretState.SAVEENERGY)
             {
-                //if enemy has a set portion less health then you: attack
-                if (this.Energy + (this.Energy / 20) > eData.Energy)
+                // har mer energi 
+                if (this.Energy > eData.Energy)
                     currentTurretState= TurretState.ATTACK;
                 else if (!isOnTarget)
                     currentTurretState= TurretState.SCAN;
@@ -166,9 +167,9 @@ namespace PG4500_2013_Innlevering1
             {
                 if (isOnTarget)
                 {
-                    if (this.Energy + (this.Energy / 20) < eData.Energy)
+                    if (this.Energy + (this.Energy / 100) * 10 < eData.Energy)
                         currentTurretState= TurretState.SAVEENERGY;
-                    if (this.Energy + (this.Energy / 20) >= eData.Energy)
+                    else
                         currentTurretState= TurretState.ATTACK;
                 }
             }
